@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Reading py_projects.csv line-by-line
-tail -n +2 py_projects.csv | while IFS= read -r line; do
+tail -n +2 $1 | while IFS= read -r line; do
 	project=$line; 
 	project=${project##*/}
 	# Getting project name
@@ -9,7 +9,17 @@ tail -n +2 py_projects.csv | while IFS= read -r line; do
 	# Getting GitHub link
 	line=`echo $line | cut -d"," -f2`
 	# Cloning into the project from the given link
-	git clone $line
+	# git clone $line
 	# Running the Miner
-	bash getCWEInfo.sh $project
+	cond=$1
+	cond=${cond:0:2}
+	if [[ $cond == "ja" ]];
+	then
+		bash java_getCWEInfo.sh $project
+		# echo "java"
+	elif [[ $cond == "py" ]];
+	then
+		bash py_getCWEInfo.sh $project
+		# echo "python"
+	fi
 done

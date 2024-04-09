@@ -25,11 +25,15 @@ done
 collection=`ls -d $1_results/*/`
 for file in ${collection};
 do
-	echo "executing BANDIT on [$file]..."
-	bandit -iii -r $file > ${file}bandit.txt
+	echo "executing Lizard on [$file]..."
+	# bandit -iii -r $file > ${file}bandit.txt
+	lizard -m $file > ${file}_lizard.txt
 	
-	echo "executing VULTURE on [$file]..."
-	vulture --min-confidence 80 $file > ${file}vulture.txt
+	echo "executing Vulture on [$file]..."
+	vulture --min-confidence 80 $file > ${file}_vulture.txt
+
+	echo "executing LCOM on [$file]..."
+	lcom $file > ${file}_lcom.txt
 done
 
 rm -rf $1
