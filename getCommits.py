@@ -1,19 +1,23 @@
 import sys
 from pydriller import Repository
-count=0
-last_n=100
-commit_reverse=[]
-for commit in Repository(sys.argv[1],only_no_merge=True,order='reverse').traverse_commits():
-  if (commit.in_main_branch==True):
-    count=count+1
-    #print(commit.hash)
-    commit_reverse.append(commit.hash)
+
+def get_commits(path, last_n):
+  count=0
+  commit_reverse=[]
+  repo_traverse = Repository(path,only_no_merge=True,order='reverse').traverse_commits()
+  for commit in repo_traverse:
+    if (commit.in_main_branch==True):
+      count=count+1
+      # print(commit.hash)
+      commit_reverse.append(commit.hash)
     if count == last_n:
       break
-      
-in_order = []
-for value in range(len(commit_reverse)):
-  in_order.append(commit_reverse.pop())
-  
-in_order='\n'.join(in_order)
-print(in_order)
+
+  return commit_reverse[::-1]
+
+if __name__ == "__main__":
+  if len(sys.argv) < 2:
+    print("Usage: getCommits.py <repo-path> <last-n-commits>")
+  commits = get_commits(sys.argv[1], int(sys.argv[2]))
+  in_order='\n'.join(commits)
+  print(in_order)

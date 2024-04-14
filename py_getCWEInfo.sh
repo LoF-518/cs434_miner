@@ -8,16 +8,19 @@ rm -f *.xml *.dot
 mkdir $1_results
 
 #collect last 100 non-merge commits
-python3.9 getCommits.py $1 > $1_results/$1.commits
-#python3.9 getCommitsInfo.py $1
+python3 getCommits.py $1 $2 > $1_results/$1.commits
+#python3 getCommitsInfo.py $1
 
 ver=0
 cat $1_results/$1.commits | while IFS= read -r line; do
 	
 	#checkout commit
-	python3.9 checkout.py $1 $line
+	python3 checkout.py $1 $line
 	
 	cp -r $1 $1_results/v${ver}
+	cd $1_results/v${ver}/
+	mkdir analysis
+	cd -
 	ver=$((ver+1))
 done
 
@@ -27,13 +30,13 @@ for file in ${collection};
 do
 	echo "executing Lizard on [$file]..."
 	# bandit -iii -r $file > ${file}bandit.txt
-	lizard -m $file > ${file}_lizard.txt
+	lizard -m $file > ${file}analysis/lizard.txt
 	
 	echo "executing Vulture on [$file]..."
-	vulture --min-confidence 80 $file > ${file}_vulture.txt
+	vulture --min-confidence 80 $file > ${file}analysis/vulture.txt
 
 	echo "executing LCOM on [$file]..."
-	lcom $file > ${file}_lcom.txt
+	lcom $file > ${file}analysis/lcom.txt
 done
 
 rm -rf $1
