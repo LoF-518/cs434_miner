@@ -17,27 +17,38 @@ cat $1_results/$1.commits | while IFS= read -r line; do
 	#checkout commit
 	python3 checkout.py $1 $line
 	
-	cp -r $1 $1_results/v${ver}
-	cd $1_results/v${ver}/
-	mkdir analysis
-	cd -
+	# cp -r $1 $1_results/v${ver}
+	# cd $1_results/v${ver}/
+	# mkdir analysis
+	mkdir $1_results/v${ver}
+
+	echo "executing Lizard on [v${ver}]..."
+	# bandit -iii -r $file > ${file}bandit.txt
+	lizard -m $1 > $1_results/v${ver}/lizard.txt
+	
+	echo "executing Vulture on [v${ver}]..."
+	vulture --min-confidence 80 $1 > $1_results/v${ver}/vulture.txt
+
+	echo "executing LCOM on [v${ver}]..."
+	lcom $1 > $1_results/v${ver}/lcom.txt
+	# cd -
 	ver=$((ver+1))
 done
 
-#run SATs on each version
-collection=`ls -d $1_results/*/`
-for file in ${collection};
-do
-	echo "executing Lizard on [$file]..."
-	# bandit -iii -r $file > ${file}bandit.txt
-	lizard -m $file > ${file}analysis/lizard.txt
+# #run SATs on each version
+# collection=`ls -d $1_results/*/`
+# for file in ${collection};
+# do
+# 	echo "executing Lizard on [$file]..."
+# 	# bandit -iii -r $file > ${file}bandit.txt
+# 	lizard -m $file > ${file}analysis/lizard.txt
 	
-	echo "executing Vulture on [$file]..."
-	vulture --min-confidence 80 $file > ${file}analysis/vulture.txt
+# 	echo "executing Vulture on [$file]..."
+# 	vulture --min-confidence 80 $file > ${file}analysis/vulture.txt
 
-	echo "executing LCOM on [$file]..."
-	lcom $file > ${file}analysis/lcom.txt
-done
+# 	echo "executing LCOM on [$file]..."
+# 	lcom $file > ${file}analysis/lcom.txt
+# done
 
 rm -rf $1
 
