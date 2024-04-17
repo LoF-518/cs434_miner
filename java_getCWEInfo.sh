@@ -22,13 +22,13 @@ cat $1_results/$1.commits | while IFS= read -r line; do
 	# cd $1_results/v${ver}/
 	# mkdir analysis
 	# cd -
-	echo "executing CK for [v${ver}]..."
 	# vulture --min-confidence 80 $file > ${file}_vulture.txt
+	echo "executing CK for [v${ver}]..."
 	java -jar ~/Downloads/ck-ck-0.7.0/target/ck-0.7.0-jar-with-dependencies.jar $1 false 0 false $1_results/v${ver}/ #analysis/
 	
 	echo "executing Lizard for [v${ver}]..."
 	# bandit -iii -r $file > ${file}bandit.txt
-	lizard -m $file > $1_results/v${ver}/lizard.txt #${file}analysis/lizard.txt
+	lizard -m $1 > $1_results/v${ver}/lizard.txt #${file}analysis/lizard.txt
 	ver=$((ver+1))
 done
 
