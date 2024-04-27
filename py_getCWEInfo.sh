@@ -24,7 +24,7 @@ cat $1_results/$1.commits | while IFS= read -r line; do
 
 	echo "executing Lizard on [v${ver}]..."
 	# bandit -iii -r $file > ${file}bandit.txt
-	lizard -m $1 > $1_results/v${ver}/lizard.txt
+	lizard -m --csv $1 > $1_results/v${ver}/lizard.csv
 	
 	echo "executing Vulture on [v${ver}]..."
 	vulture --min-confidence 80 $1 > $1_results/v${ver}/vulture.txt

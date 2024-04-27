@@ -18,6 +18,7 @@ def get_commits(path, last_n):
 if __name__ == "__main__":
   if len(sys.argv) < 2:
     print("Usage: getCommits.py <repo-path> <last-n-commits>")
+    exit(-1)
   commits = get_commits(sys.argv[1], int(sys.argv[2]))
   in_order='\n'.join(commits)
   print(in_order)

@@ -28,7 +28,7 @@ cat $1_results/$1.commits | while IFS= read -r line; do
 	
 	echo "executing Lizard for [v${ver}]..."
 	# bandit -iii -r $file > ${file}bandit.txt
-	lizard -m $1 > $1_results/v${ver}/lizard.txt #${file}analysis/lizard.txt
+	lizard -m --csv $1 > $1_results/v${ver}/lizard.csv #${file}analysis/lizard.txt
 	ver=$((ver+1))
 done
 
